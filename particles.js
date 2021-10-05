@@ -10,35 +10,37 @@ let title = {
     height: 10
 }
 
+
+
+let colors = [
+    "#B5EAEA",
+    "#FFBCBC",
+    "#F38BA0",
+    "#EDF6E5",
+    "#FFDEFA",
+    "#C490E4",
+    "#A7C5EB",
+    "#CD5D7D",
+    "#FAFCC2",
+    "#DDF3F5",
+    "#F9F9F9"
+]
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const numberOfParticles = Math.floor(Math.random() * 100)
-const gradient = ctx.createLinearGradient(0, 0, canvas.height, canvas.width);
+const numberOfParticles = Math.floor(Math.random() * 300)
 
-gradient.addColorStop(0, "#B5EAEA");
-gradient.addColorStop(0.1, "#FFBCBC");
-gradient.addColorStop(0.2, "#F38BA0");
-gradient.addColorStop(0.3, "#EDF6E5");
-gradient.addColorStop(0.4, "#FFDEFA");
-gradient.addColorStop(0.5, "#C490E4");
-gradient.addColorStop(0.6, "#A7C5EB");
-gradient.addColorStop(0.7, "#CD5D7D");
-gradient.addColorStop(0.8, "#FAFCC2");
-gradient.addColorStop(0.9, "#DDF3F5");
-gradient.addColorStop(1, "#F9F9F9");
 
 let particles = [];
 
 class Particle {
-    constructor(x, y) {
+    constructor(x, y, color) {
         this.x = x
         this.y = y
-        this.size = Math.random() * 50 + 1 // to randomize
+        this.color = color
+        this.size = Math.random() * 10 + 1 // to randomize
         this.weight = Math.random() * 10 + 1 // to randomize
-        this.directionX = -3
-
-
+        this.directionX = Math.random() * -5
     }
 
     update() {
@@ -47,7 +49,7 @@ class Particle {
             this.weight = Math.random() * 10 + 1
             this.x = Math.random() * canvas.width * 1.3
         }
-        this.weight += 0.05
+        this.weight += 0.01
         this.y += this.weight
         this.x += this.directionX
 
@@ -58,13 +60,16 @@ class Particle {
             this.y < title.y + title.height
             &&
             this.y + this.size > title.y) {
-            this.y -= 3
+            this.y -= Math.random() * 5 + 3
+            // this.x += Math.random() * 5 + 3
             this.weight *= -0.5
         }
+
+        
     }
 
     draw() {
-        ctx.fillStyle = gradient
+        ctx.fillStyle = this.color
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
         ctx.closePath()
@@ -77,11 +82,15 @@ const init = () => {
     for (i = 0; i < numberOfParticles; i++) {
         const x = Math.random() * canvas.width
         const y = Math.random() * canvas.height
+        const color = colors[Math.floor(Math.random() * colors.length)]
+
         
-        particles.push(new Particle(x, y))
+        particles.push(new Particle(x, y, color))
+
+        
     }
 
-    console.log(particles)
+    // console.log(particles)
 }
 
 init();
@@ -90,13 +99,13 @@ init();
 
 const animate = () => {
     // const gradient = 
-    ctx.fillStyle = 'rgba(255,255,255,0.7)'
+    ctx.fillStyle = 'rgba(0,0,0)'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     for (i = 0; i < particles.length; i++) {
         particles[i].update()
         particles[i].draw()
     }
-    // ctx.fillRect(title.x, title.y, title.width, title.height)
+  
     requestAnimationFrame(animate)
 }
 
